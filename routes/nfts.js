@@ -20,7 +20,6 @@ router.get("/nft/:nft_id", async (req, res) => {
         address,
         chain,
       });
-    console.log(response.result)
     res.json(response.result);
 });
 
