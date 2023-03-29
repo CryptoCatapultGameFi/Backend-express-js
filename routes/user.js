@@ -19,7 +19,7 @@ router.post("/user/:id", async (req, res) => {
             status = "new"
         }
         res.send({status});
-        console.log(user.rows)
+
         
     }  catch (err) {
         console.error(err.message);
@@ -32,7 +32,7 @@ router.get("/status/:id", async (req, res) => {
         const status =  await client.query(
             `SELECT users.user_playing FROM "users" WHERE "user_address" = $1`, [id]
         )
-        console.log(status.rows)
+
         res.json(status.rows);     
     }  catch (err) {
         console.error(err.message);
@@ -86,7 +86,6 @@ router.get("/nft/:id", async (req, res) => {
         const user = await client.query(
             `SELECT * FROM "users" WHERE "user_address" = $1`, [id]
         )
-        console.log(user.rows[0])
         const user_nft = await client.query(
             `SELECT * FROM "user_nft_used" WHERE "user_nft_used_id" = $1 `, [user.rows[0].user_nft_using_id]
         )

@@ -9,7 +9,6 @@ const Web3 = require('web3')
 
 function randomCatapult() {
   const number = Math.floor(Math.random() * 101);
-  console.log(number)
   if( number <= 60 ) {
     return 'common'
   }
@@ -56,8 +55,6 @@ router.get("/random/catapult", async (req, res) => {
       catapult_gateway: catapult.rows[0].catapult_gateway
 
   }
-  console.log(response.catapult_gateway)
-  console.log(response.tier)
   res.json(response)
 })
 
@@ -88,15 +85,13 @@ router.get("/rubber/:user_id/:catapult_id", async (req, res) => {
   // const now = new Date(2023,3,31);
     const now = new Date(Date.now());
     now.setHours(0,0,0,0)
-    console.log(now)
-    
     const {user_id, catapult_id} = req.params
-    console.log(catapult_id)
+
     const rubber = await client.query(
       `SELECT COUNT(user_nft_used_id) FROM "user_nft_used"
       WHERE user_address = $1 AND catapult_address = $2 AND time_stamp = $3`, [user_id, catapult_id, now]
     )
-    console.log(rubber.rows[0].count)
+
     res.json(rubber.rows[0])
   } catch (err) {
     console.error(err.message);
