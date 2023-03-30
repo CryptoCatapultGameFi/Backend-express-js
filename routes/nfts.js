@@ -30,14 +30,26 @@ router.get("/acc_nft/:id", async (req, res) => {
   res.json(response.result);
 });
 
-router.get("/nft/:nft_id", async (req, res) => {
+router.get("/all/:nft_id", async (req, res) => {
   const address = req.params.nft_id;
   const chain = EvmChain.MUMBAI;
   const response = await Moralis.EvmApi.nft.getContractNFTs({
       address,
       chain,
     });
-  res.json(response.result);
+  let totalBullet = 0
+  let totalCatapult = 0
+  for(const nft of response.result) {
+    if(nft.result.metadata !== undefined) {
+      if(nft.result.metadata.type === "bullet") {
+        totalBullet++;
+      }
+      else if(nft.result.metadata.type === "catapult") {
+        totalCatapult++;
+      }
+    }
+  }
+  res.json({totalBullet, totalCatapult});
 });
 
 router.get("/random/catapult", async (req, res) => {

@@ -7,20 +7,30 @@ const { response } = require('express');
 
 router.post("/user/:id", async (req, res) => {
     try {
-        let status = "old"
+        let status = "success"
+        const { id } = req.params;
+        await client.query(
+            `INSERT INTO "users" ("user_address","user_playing")
+            VALUES ($1,$2) RETURNING *`, [id, 0])
+        res.send({status});
+    }  catch (err) {
+        console.error(err.message);
+    }
+});
+
+
+router.get("/:id", async (req, res) =>  {
+    try {
         const { id } = req.params;
         const user = await client.query(
             `SELECT * FROM "users" WHERE "user_address" = $1`, [id]
         )
         if(user.rows[0] === undefined) {
-            await client.query(
-                `INSERT INTO "users" ("user_address","user_playing")
-                VALUES ($1,$2) RETURNING *`, [id, 0])
-            status = "new"
+            res.json({status: "new"})
         }
-        res.send({status});
-
-        
+        else {
+            res.json({status: "old"}) 
+        } 
     }  catch (err) {
         console.error(err.message);
     }
