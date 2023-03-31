@@ -51,13 +51,10 @@ router.get("/status/:id", async (req, res) => {
 
 router.post("/play", async (req, res) => {
     try{
-        
         const { id, catapult, bullet } = req.body  
-
         const user = await client.query(
             `SELECT * FROM "users" WHERE "user_address" = $1`, [id]
         )
-    
         if (!user.rows[0].user_playing) {
             const user_nft_used = await client.query(
                 `INSERT INTO "user_nft_used"(
@@ -77,12 +74,6 @@ router.post("/play", async (req, res) => {
                 SET user_playing = $1, user_nft_using_id = $2  
                 WHERE "user_address" = $3`, [1, user_nft_used.rows[0].user_nft_used_id , id]
             )
-            // if(now.valueOf() > user_nft_used.rows[0].time_stamp.valueOf()) {
-            //     console.log("yes")
-            // }
-            // if(now.valueOf() <= user_nft_used.rows[0].time_stamp.valueOf()) {
-            //     console.log("no")
-            // }
         } 
         res.json({id})
     }  catch (err) {

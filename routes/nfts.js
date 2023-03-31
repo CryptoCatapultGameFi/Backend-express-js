@@ -21,53 +21,66 @@ function randomCatapult() {
  }
 
 router.get("/acc_nft/:id", async (req, res) => {
-  const address = req.params.id;
-  const chain = EvmChain.MUMBAI;
-  const response = await Moralis.EvmApi.nft.getWalletNFTs({
-      address,
-      chain,
-    });
-  res.json(response.result);
+  try{
+    const address = req.params.id;
+    const chain = EvmChain.MUMBAI;
+    const response = await Moralis.EvmApi.nft.getWalletNFTs({
+        address,
+        chain,
+      });
+    res.json(response.result);
+  } catch (err) {
+    console.error(err.message);
+  }
 });
 
 router.get("/all/:nft_id", async (req, res) => {
-  const address = req.params.nft_id;
-  const chain = EvmChain.MUMBAI;
-  const response = await Moralis.EvmApi.nft.getContractNFTs({
-      address,
-      chain,
-    });
-  let totalBullet = 0
-  let totalCatapult = 0
-  for(const nft of response.result) {
-    if(nft.result.metadata !== undefined) {
-      if(nft.result.metadata.type === "bullet") {
-        totalBullet++;
-      }
-      else if(nft.result.metadata.type === "catapult") {
-        totalCatapult++;
+  try {
+    const address = req.params.nft_id;
+    const chain = EvmChain.MUMBAI;
+    const response = await Moralis.EvmApi.nft.getContractNFTs({
+        address,
+        chain,
+      });
+    let totalBullet = 0
+    let totalCatapult = 0
+    for(const nft of response.result) {
+      if(nft.result.metadata !== undefined) {
+        if(nft.result.metadata.type === "bullet") {
+          totalBullet++;
+        }
+        else if(nft.result.metadata.type === "catapult") {
+          totalCatapult++;
+        }
       }
     }
-  }
-  res.json({totalBullet, totalCatapult});
-});
+    res.json({totalBullet, totalCatapult});
+  } catch (err) {
+    console.error(err.message);
+    }
+})
+  
 
 router.get("/random/catapult", async (req, res) => {
-  const rarity = randomCatapult()
-  const id = Web3.utils.toBN(Web3.utils.randomHex(32))
-  const catapult =  await client.query(
-      `SELECT * FROM "catapult" WHERE "tier" = $1 
-      ORDER BY RANDOM() LIMIT 1 `, [rarity]
-  )
-  const response =  
-  { 
-      id: id.toString(),
-      tier: catapult.rows[0].tier,
-      catapult_name:  catapult.rows[0].catapult_name,
-      catapult_gateway: catapult.rows[0].catapult_gateway
-
+  try{
+    const rarity = randomCatapult()
+    const id = Web3.utils.toBN(Web3.utils.randomHex(32))
+    const catapult =  await client.query(
+        `SELECT * FROM "catapult" WHERE "tier" = $1 
+        ORDER BY RANDOM() LIMIT 1 `, [rarity]
+    )
+    const response =  
+    { 
+        id: id.toString(),
+        tier: catapult.rows[0].tier,
+        catapult_name:  catapult.rows[0].catapult_name,
+        catapult_gateway: catapult.rows[0].catapult_gateway
+    }
+    res.json(response)
+  } catch (err) {
+    console.error(err.message);
   }
-  res.json(response)
+
 })
 
 router.get("/random/bullet", async (req, res) => {
@@ -110,7 +123,5 @@ router.get("/rubber/:user_id/:catapult_id", async (req, res) => {
   }
 
 })
-
-
 
 module.exports = router;
