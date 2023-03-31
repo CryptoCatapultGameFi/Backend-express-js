@@ -8,7 +8,6 @@ const { EvmChain } = require("@moralisweb3/common-evm-utils");
 const nfts = require('./routes/nfts');
 const contracts = require('./routes/contracts');
 const app = express();
-const sql = require('./routes/sql')
 const user = require('./routes/user')
 const cors = require('cors')
 app.use(cors())
@@ -17,7 +16,6 @@ app.use(express.json());
 
 app.use('/nfts', nfts);
 app.use('/contracts', contracts);
-app.use('/sql', sql);
 app.use('/user', user);
 
 // Add this a startServer function that initialises Moralis
