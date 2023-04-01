@@ -43,7 +43,7 @@ router.get("/status/:id", async (req, res) => {
             `SELECT users.user_playing FROM "users" WHERE "user_address" = $1`, [id]
         )
 
-        res.json(status.rows);     
+        res.json(status.rows[0]);     
     }  catch (err) {
         console.error(err.message);
     }
@@ -90,7 +90,7 @@ router.get("/nft/:id", async (req, res) => {
         const user_nft = await client.query(
             `SELECT * FROM "user_nft_used" WHERE "user_nft_used_id" = $1 `, [user.rows[0].user_nft_using_id]
         )
-        res.json(user_nft.rows)
+        res.json(user_nft.rows[0])
     } catch (err) {
         console.error(err.message);
     }
