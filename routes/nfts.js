@@ -57,7 +57,6 @@ router.get("/all/:nft_id", async (req, res) => {
     const user = await client.query(
       `SELECT COUNT(user_address) FROM "users"`)
     const totalUser = user.rows[0].count
-    console.log(totalUser)
 
     res.json({totalBullet, totalCatapult, totalUser});
   } catch (err) {
